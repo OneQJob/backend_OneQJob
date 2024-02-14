@@ -1,6 +1,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+iml,intellij+all,macos,windows,intellij,gradle,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+iml,intellij+all,macos,windows,intellij,gradle,java
 
+### Docker (추가 사항) ###
+.env
+volume/
+
+###application.yml 민감 정보 (추가 사항)###
+src/main/resources/application-database.yml
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
