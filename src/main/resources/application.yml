@@ -1,9 +1,6 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/OneQJob?characterEncoding=utf8
-    username: root
-    password: 0000
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: database
 
   jpa:
     hibernate:
