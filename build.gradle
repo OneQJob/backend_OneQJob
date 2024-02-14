@@ -27,9 +27,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'net.nurigo:sdk:4.3.0'
-    implementation 'org.springframework.boot:spring-boot-starter-security'// coolsms
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0' // 쿼리 파라미터로 로그 남기기
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
