@@ -40,7 +40,7 @@ public class UserController {
             ResponseDto responseDto = new ResponseDto(true, "user create successfully", responseData);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } catch (CustomException e) {
-            ResponseDto errorResponse = new ResponseDto(false, e.getErrorCode().getDescription(), null);
+            ResponseDto errorResponse = new ResponseDto(false, e.getMessage(), null);
             HttpStatus status = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<>(errorResponse, status);
         } catch (Exception e) {
@@ -49,3 +49,4 @@ public class UserController {
         }
     }
 }
+//필터를 쓰면 try catch 대신

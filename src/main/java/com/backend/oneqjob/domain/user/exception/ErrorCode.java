@@ -9,8 +9,8 @@ public enum ErrorCode {
     USER_ID_DUPLICATE(106, "UserId already exists"),
     USER_ID_FORMAT_INVALID(107, "UserId format is invalid");
 
-    private final int code;
-    private final String description;
+    private final int code; // 에러 코드
+    private final String description; // 에러 메시지
 
     ErrorCode(int code, String description) {
         this.code = code;
@@ -18,11 +18,10 @@ public enum ErrorCode {
     }
 
     public int getCode() {
-        return code;
-    }  // 추후에 SLF4J 이용해서 내부 로고 남길예정
+        return code; // 에러 코드 반환
+    }
 
     public String getDescription() {
-        return description;
+        return description; // 에러 메시지 반환
     }
 }
-

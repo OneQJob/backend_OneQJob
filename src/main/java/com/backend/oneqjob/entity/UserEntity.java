@@ -24,7 +24,7 @@ public class UserEntity {
     private String imgUrl;
     @Column(name="date_of_birth")
     private String dateOfBirth;
-    @Column(name="user_id",nullable = false)
+    @Column(name="user_id",nullable = false,unique = true)
     private String userId;
     @Column(name="user_pw",nullable = false)
     private String userPw;

@@ -40,19 +40,16 @@ public class UserRegisterServiceImpl implements UserRegisterService {
      *                   3. userPw  비밀번호 유효성 : 8자리 ~16자리 , 영문 대문자 소문자 포함, 특수문자 포함
      */
     @Override
-    public Map<String, Object> signUpRequired(SignUpRequestDto requestDto) throws Exception {
+    public Map<String, Object> signUpRequired(SignUpRequestDto requestDto) throws CustomException {
         checkDuplicateId(requestDto.getUserId());
         checkIdValidity(requestDto.getUserId());
         checkPwValidity(requestDto.getUserPw());
-
         LocationEntity location = convertAddressDtoToLocationEntity(requestDto.getAddress());
         LocationEntity savedLocation = locationRepo.save(location);
 
         UserEntity user = convertSignUpRequestDtoToUserEntity(requestDto, savedLocation);
-
         user.setUserPw(PasswordUtils.hashPassword(user.getUserPw()));
         userRepo.save(user);
-
         Map<String, Object> resultData = new HashMap<>();
         resultData.put("userName", requestDto.getUserName());
         resultData.put("userId", requestDto.getUserId());
@@ -94,4 +91,3 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         }
     }
 }
-
