@@ -2,6 +2,7 @@ spring:
   profiles:
     active: database
 
+
   jpa:
     hibernate:
       ddl-auto: update
