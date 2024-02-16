@@ -1,9 +1,6 @@
 spring:
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: database
 
   jpa:
     hibernate:
@@ -13,23 +10,6 @@ spring:
           show_sql: true
           format_sql: true
 
-  security:
-    csrf:
-      enabled: false
-
-
-coolsms:
-  api:
-    key: ${COOLSMS_API_KEY}
-    secret: ${COOLSMS_API_SECRET}
-    url: ${COOLSMS_API_URL}
-
 logging:
   level:
-    org:
-      hibernate:
-        SQL: debug
-      springframework:
-        security: DEBUG
-        web: DEBUG
-
+    org.hibernate.SQL: debug
