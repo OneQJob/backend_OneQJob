@@ -17,6 +17,7 @@ spring:
     csrf:
       enabled: false
 
+
 coolsms:
   api:
     key: ${COOLSMS_API_KEY}
