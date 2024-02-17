@@ -116,6 +116,7 @@ public class OtpServiceImpl implements OtpService {
     public Map<String, Object> getData(HttpSession session) throws CustomException {
         Map<String, Object> data = new HashMap<>();
         try {
+            data.put("Id",session.getId());
             data.put("phone", session.getAttribute("phoneNumber"));
             data.put("code", session.getAttribute("code"));
             data.put("유효시간", "3분");

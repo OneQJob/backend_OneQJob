@@ -33,7 +33,14 @@ logging:
         security: DEBUG
         web: DEBUG
 
-spring.config.import: classpath:application-secret.yml
+coolsms:
+  api:
+    key: NCSNXJIHI3CP9PLI
+    secret: TRFTY99UBFGOCPILROSWQLL18PTOOPFD
+    url: https://api.coolsms.co.kr
+    sender: 01096080768
+
+#spring.config.import: classpath:application-secret.yml
 
 #server:
 #  servlet:
