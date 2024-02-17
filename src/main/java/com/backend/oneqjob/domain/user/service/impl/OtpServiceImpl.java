@@ -1,5 +1,7 @@
 package com.backend.oneqjob.domain.user.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.backend.oneqjob.domain.user.exception.CustomException;
 import com.backend.oneqjob.domain.user.exception.ErrorCode;
 import com.backend.oneqjob.domain.user.service.OtpService;
@@ -20,8 +22,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OtpServiceImpl implements OtpService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OtpServiceImpl.class);
     @Value("${coolsms.api.sender}")
     private String sender;
+    
 
     /**
      * 전화번호, 인증번호 등을 저장할 세션생성
@@ -29,14 +33,22 @@ public class OtpServiceImpl implements OtpService {
      * @param requestDto 전화번호
      * @return session (전화번호, 인증번호 )를 담아서 보냄
      * @throws CustomException 세션을 만들다가 생긴 오류
+     * 
      */
+
     @Override
     public HttpSession createSession(HttpSession session, SmsRequestDto requestDto) throws CustomException {
         try {
             session.setAttribute("phoneNumber", requestDto.getPhoneNumber());
             session.setAttribute("code", makeRandomCode());
+
+            // 세션 속성이 설정된 후 로그 추가
+            LOGGER.info("Session created with ID: {}", session.getId());
+            LOGGER.info("Session attributes set - phoneNumber: {}, code: {}", requestDto.getPhoneNumber(), session.getAttribute("code"));
+
             return session;
         } catch (Exception e){
+            LOGGER.error("Error creating session", e);
             throw new CustomException(ErrorCode.SESSION_ERROR);
         }
     }
@@ -48,6 +60,24 @@ public class OtpServiceImpl implements OtpService {
         }
         return ranStr;
     }
+//    @Override
+//    public HttpSession createSession(HttpSession session, SmsRequestDto requestDto) throws CustomException {
+//        try {
+//            session.setAttribute("phoneNumber", requestDto.getPhoneNumber());
+//            session.setAttribute("code", makeRandomCode());
+//            return session;
+//        } catch (Exception e){
+//            throw new CustomException(ErrorCode.SESSION_ERROR);
+//        }
+//    }
+//
+//    private String makeRandomCode() {
+//        String ranStr = "";
+//        for (int i = 0; i < 6; i++) {
+//            ranStr += (int) (Math.random() * 10);
+//        }
+//        return ranStr;
+//    }
 
     /**
      * 외부 api 인 DefaultMessageService 는 기본인자값으로 발신자, 수신자, 텍스트를 받아야함
