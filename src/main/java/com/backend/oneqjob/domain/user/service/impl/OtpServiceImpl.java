@@ -27,7 +27,7 @@ public class OtpServiceImpl implements OtpService {
      * 전화번호, 인증번호 등을 저장할 세션생성
      * @param session
      * @param requestDto 전화번호
-     * @return session (전화번호, 인증번호 , 인증상태여부)를 담아서 보냄
+     * @return session (전화번호, 인증번호 )를 담아서 보냄
      * @throws CustomException 세션을 만들다가 생긴 오류
      */
     @Override
@@ -35,7 +35,6 @@ public class OtpServiceImpl implements OtpService {
         try {
             session.setAttribute("phoneNumber", requestDto.getPhoneNumber());
             session.setAttribute("code", makeRandomCode());
-            session.setAttribute("validStatus", false);
             return session;
         } catch (Exception e){
             throw new CustomException(ErrorCode.SESSION_ERROR);
@@ -78,9 +77,9 @@ public class OtpServiceImpl implements OtpService {
 
     /**
      * 1.유저에게 인증코드를 성공적으로 보낸 후에 , 프론트에 data 에 담을 내용 response 객체 생성
-     * 2.세션에 유저의 인증 유효시간과 , 세션을 얼마동안 유지 할지 지정
+     * 2.세션에 유저의 인증 유효시간인, 세션을 얼마동안 유지 할지 지정
      * @param session
-     * @return data : 핸드폰 번호 , 코드 , 유효시간
+     * @return data : 핸드폰 번호 , 코드 , 유효시간(세션유지시간)
      * @throws CustomException 세션에 유저의 인증 유효시간과 , 유지 시간 설정에 실패하면 에러 발생
      */
     @Override
@@ -90,8 +89,7 @@ public class OtpServiceImpl implements OtpService {
             data.put("phone", session.getAttribute("phoneNumber"));
             data.put("code", session.getAttribute("code"));
             data.put("유효시간", "3분");
-            session.setAttribute("validTime", 180);
-            session.setMaxInactiveInterval(600);
+            session.setMaxInactiveInterval(180);
         }catch (IllegalStateException e){
             throw new CustomException(ErrorCode.SESSION_ERROR);
         }
