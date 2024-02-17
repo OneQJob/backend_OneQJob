@@ -37,6 +37,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     // sms-send 에서 추가한 종속성
     implementation 'net.nurigo:sdk:4.3.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
+
 }
 
 tasks.named('test') {
