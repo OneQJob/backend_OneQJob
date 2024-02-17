@@ -21,9 +21,9 @@ public class SmsController {
     }
 
     @PostMapping("/checkOtp")
-    public ResponseEntity<ResponseDto> sendOtp(@RequestBody VerificationCodeDto otpCodeRequest, HttpSession session) {
+    public ResponseEntity<ResponseDto> sendOtp(@RequestBody VerificationCodeDto otpCodeRequest) {
         try {
-            boolean isValid = otpService.verifyOtp(otpCodeRequest, session);
+            boolean isValid = otpService.verifyOtp(otpCodeRequest);
             if (isValid) {
                 ResponseDto responseDto = new ResponseDto(true, "Authentication code verification succeeded.", null);
                 return ResponseEntity.ok(responseDto);

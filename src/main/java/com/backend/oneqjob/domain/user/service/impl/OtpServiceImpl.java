@@ -6,9 +6,12 @@ import com.backend.oneqjob.domain.user.service.OtpService;
 import com.backend.oneqjob.entity.dto.VerificationCodeDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collections;
 import java.util.logging.Logger;
+
 
 @Service
 public class OtpServiceImpl implements OtpService {
@@ -16,7 +19,8 @@ public class OtpServiceImpl implements OtpService {
 
     private static final Logger LOGGER = Logger.getLogger(OtpServiceImpl.class.getName());
 
-    public boolean verifyOtp(VerificationCodeDto codeDto, HttpSession session) {
+    public boolean verifyOtp(VerificationCodeDto codeDto) {
+        HttpSession session = getCurrentSession();
         String phone = codeDto.getPhoneNumber();
         String code = codeDto.getCode();
 
@@ -52,6 +56,10 @@ public class OtpServiceImpl implements OtpService {
         session.setMaxInactiveInterval(600);
         LOGGER.info("OTP verification successful. Session validStatus set to true.");
         return true;
+    }
+    private HttpSession getCurrentSession() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return attr != null ? attr.getRequest().getSession(false) : null;
     }
 
 }
