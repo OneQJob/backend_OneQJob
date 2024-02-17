@@ -1,13 +1,10 @@
 package com.backend.oneqjob.companyUser.controller;
 
 import com.backend.oneqjob.companyUser.dto.CompanySignUpRequest;
-import com.backend.oneqjob.companyUser.exception.CustomException;
-import com.backend.oneqjob.companyUser.exception.ErrorCode;
-import com.backend.oneqjob.companyUser.service.BusinessNumberVerificationService;
-import com.backend.oneqjob.companyUser.service.CompanyUserSignUpService;
-import jakarta.servlet.http.HttpSession;
+import com.backend.oneqjob.companyUser.service.CompanySignUpServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,51 +13,37 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class CompanyUserSignUpController {
 
-    private final CompanyUserSignUpService signUpService;
-    private final BusinessNumberVerificationService verificationService;
-    private final HttpSession session;
+    private final CompanySignUpServiceImpl signUpService;
 
-    @PostMapping("/checkBusiness/{CompanyAccount}")
-    public ResponseEntity<String> BusinessNumberVerification(@PathVariable String companyAccount, HttpSession session) {
-        String result = verificationService.businessRegistration(companyAccount,session);
-        if (result != null) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("사업자 등록 정보를 조회하는 중 오류가 발생했습니다.");
-        }
-    }
-
-    //회원가입
+    /**
+     * @param request (사업자 회원정보)
+     * @param bindingResult (회원 정보 검증 form bindingResult)
+     * @return (binding 실패 시 에러 메세지, 회원가입 시 성공 메세지)
+     */
     @PostMapping("/company/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody CompanySignUpRequest request, BindingResult bindingResult) {
-
-        Boolean emailVerified = (Boolean) session.getAttribute("emailVerified");
-        if (emailVerified == null || !emailVerified) {
-           throw new RuntimeException("Email verification required");
-        }
-        Boolean businessNumberVerified = (Boolean) session.getAttribute("businessNumberVerified");
-        if (businessNumberVerified == null || !businessNumberVerified) {
-            throw new RuntimeException("BusinessNumber verification required.");
-        }
+    public ResponseEntity signup(@Valid @RequestBody CompanySignUpRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new RuntimeException("User format is invalid");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid input information.");
         }
         if (!request.getCompanyPw1().equals(request.getCompanyPw2())) {
-            bindingResult.reject("passwordIncorrect");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
         }
-
         try {
             signUpService.companySignup(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body("successfully singUp");
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("Signup Error occurred");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Duplicate input information.");
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("Signup Error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed: Internal server error");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("successfully sinUp");
+
     }
 }

@@ -341,4 +341,8 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+### application.yml###
+application-api-key.yml
+application.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+iml,intellij+all,macos,windows,intellij,gradle,java

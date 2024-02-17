@@ -9,24 +9,24 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CompanySignUpRequest {
-    @NotBlank
+    @NotBlank(message = "company name is required.")
     private String companyName;
 
-    @NotBlank
-    private String companyAccount;
+    @NotBlank(message = "Invalid input for business number")
+    private String businessNumber;
 
     private String companyLogoImgPileName;
 
     private String companyLogoImgUrl;
 
     @Email
-    @NotBlank
+    @NotBlank(message = "Invalid input for email")
     private String companyEmail;
 
-    @NotBlank
+    @NotBlank(message = "Invalid password format.")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     private String companyPw1;
 
-    @NotBlank
+    @NotBlank(message = "Password is required.")
     private String companyPw2;
 }

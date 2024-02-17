@@ -22,9 +22,9 @@ public class CompanyUser {
 
     //사업자번호
     @Column(length = 10, unique = true, nullable = false)
-    private String companyAccount;
+    private String businessNumber;
 
-    //기업이 올린 사진명
+    //사진명
     private String companyLogoImgPileName;
 
     //사진url
