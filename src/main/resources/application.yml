@@ -14,10 +14,5 @@ logging:
   level:
     org.hibernate.SQL: debug
     p6spy: debug
-# p6spy: debug 쿼리 파라미터 로그 찍어 주는 속성 추가했어요 <- 머지 시에는 주석 지울게요
 
-coolsms:
-  api:
-    key: ${COOLSMS_API_KEY}
-    secret: ${COOLSMS_API_SECRET}
-    url: ${COOLSMS_API_URL}
+spring.config.import: classpath:application-secret.yml

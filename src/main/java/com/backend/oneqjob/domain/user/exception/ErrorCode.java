@@ -7,10 +7,12 @@ public enum ErrorCode {
     AUTH_ERROR(104, "Auth Error occurred"),
     PASSWORD_FORMAT_INVALID(105, "Password format is invalid"),
     USER_ID_DUPLICATE(106, "UserId already exists"),
-    USER_ID_FORMAT_INVALID(107, "UserId format is invalid");
+    USER_ID_FORMAT_INVALID(107, "UserId format is invalid"),
+    SMS_SENDING_ERROR(108, "Error occurred while sending SMS"),
+    SESSION_ERROR(109, "Session handling error");
 
-    private final int code; // 에러 코드
-    private final String description; // 에러 메시지
+    private final int code;
+    private final String description;
 
     ErrorCode(int code, String description) {
         this.code = code;
@@ -18,10 +20,10 @@ public enum ErrorCode {
     }
 
     public int getCode() {
-        return code; // 에러 코드 반환
+        return code;
     }
 
     public String getDescription() {
-        return description; // 에러 메시지 반환
+        return description;
     }
 }

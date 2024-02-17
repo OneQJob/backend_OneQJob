@@ -35,6 +35,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // sms-send 에서 추가한 종속성
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 tasks.named('test') {
