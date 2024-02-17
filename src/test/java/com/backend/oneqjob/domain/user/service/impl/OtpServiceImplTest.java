@@ -14,13 +14,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 
-class SendOtpServiceImplTest {
+class OtpServiceImplTest {
 
     @Mock
     private HttpSession session;
 
     @InjectMocks
-    private SendOtpServiceImpl sendOtpService;
+    private OtpServiceImpl sendOtpService;
 
     @BeforeEach
     void setUp() {

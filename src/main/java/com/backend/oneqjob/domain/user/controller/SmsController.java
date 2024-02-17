@@ -1,7 +1,7 @@
 package com.backend.oneqjob.domain.user.controller;
 import com.backend.oneqjob.domain.user.exception.CustomException;
 import com.backend.oneqjob.entity.dto.SmsRequestDto;
-import com.backend.oneqjob.domain.user.service.SendOtpService;
+import com.backend.oneqjob.domain.user.service.OtpService;
 import com.backend.oneqjob.global.api.ResponseDto;
 import jakarta.servlet.http.HttpSession;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -16,10 +16,10 @@ import java.util.Map;
 @RequestMapping("/user")
 public class SmsController {
 
-    private final SendOtpService otpService;
+    private final OtpService otpService;
     private final DefaultMessageService messageService;
 
-    public SmsController(SendOtpService otpService,
+    public SmsController(OtpService otpService,
                          @Value("${coolsms.api.key}") String apiKey,
                          @Value("${coolsms.api.secret}") String apiSecret,
                          @Value("${coolsms.api.url}") String apiUrl) {

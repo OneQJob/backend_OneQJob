@@ -6,7 +6,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 
 import java.util.Map;
 
-public interface SendOtpService {
+public interface OtpService {
 
     HttpSession createSession(HttpSession session, SmsRequestDto requestDto) throws Exception;
 

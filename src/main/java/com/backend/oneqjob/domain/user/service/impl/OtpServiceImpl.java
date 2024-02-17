@@ -2,7 +2,7 @@ package com.backend.oneqjob.domain.user.service.impl;
 
 import com.backend.oneqjob.domain.user.exception.CustomException;
 import com.backend.oneqjob.domain.user.exception.ErrorCode;
-import com.backend.oneqjob.domain.user.service.SendOtpService;
+import com.backend.oneqjob.domain.user.service.OtpService;
 import com.backend.oneqjob.entity.dto.SmsRequestDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SendOtpServiceImpl implements SendOtpService {
+public class OtpServiceImpl implements OtpService {
 
     @Value("${coolsms.api.sender}")
     private String sender;
