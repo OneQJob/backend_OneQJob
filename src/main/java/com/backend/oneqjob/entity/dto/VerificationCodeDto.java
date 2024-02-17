@@ -8,6 +8,6 @@ import lombok.Setter;
 public class VerificationCodeDto {
 
     private String phoneNumber;
-    private String VerificationCode;
+    private String code;
 
 }
