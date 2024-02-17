@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/one_q_job
+    username: admin
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
