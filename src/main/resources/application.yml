@@ -1,18 +1,27 @@
 spring:
-  profiles:
-    active: database
+  datasource:
+    url: jdbc:mysql://localhost:3306/OneQJob?characterEncoding=utf8
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
       properties:
         hibernate:
+          dialect: org.hibernate.dialect.MySQL8Dialect
           show_sql: true
           format_sql: true
+
+
 
 logging:
   level:
     org.hibernate.SQL: debug
     p6spy: debug
+    org:
+      springframework:
+        security: DEBUG
 
 spring.config.import: classpath:application-secret.yml

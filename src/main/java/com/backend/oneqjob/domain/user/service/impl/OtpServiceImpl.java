@@ -89,7 +89,7 @@ public class OtpServiceImpl implements OtpService {
             data.put("phone", session.getAttribute("phoneNumber"));
             data.put("code", session.getAttribute("code"));
             data.put("유효시간", "3분");
-            session.setMaxInactiveInterval(180);
+            session.setMaxInactiveInterval(500);
         }catch (IllegalStateException e){
             throw new CustomException(ErrorCode.SESSION_ERROR);
         }
