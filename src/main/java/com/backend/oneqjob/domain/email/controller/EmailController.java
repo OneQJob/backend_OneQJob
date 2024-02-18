@@ -8,11 +8,14 @@ import com.backend.oneqjob.global.api.ResponseDto;
 import com.backend.oneqjob.global.util.EmailUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +45,7 @@ public class EmailController {
             @RequestParam("signup") Boolean isSignUp,
             HttpServletRequest request
     ) {
+
         if (isSignUp) {
             //TODO 이미 해당 이메일을 사용하는 사업자가 있는지 확인 -> 사업자 회원가입 로직과 merge 한 후
         }
@@ -68,7 +72,7 @@ public class EmailController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto> checkEmailVerificationCode(
-            @RequestBody EmailVerifyRequestDto requestDto,
+            @Valid @RequestBody EmailVerifyRequestDto requestDto,
             @SessionAttribute(name = EmailConst.TRANSMISSION_SESSION, required = false) String realCode,
             HttpServletRequest request
     ) {
