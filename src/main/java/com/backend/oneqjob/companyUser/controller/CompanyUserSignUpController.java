@@ -1,6 +1,8 @@
 package com.backend.oneqjob.companyUser.controller;
 
+import com.backend.oneqjob.companyUser.dto.BusinessNumberRequest;
 import com.backend.oneqjob.companyUser.dto.CompanySignUpRequest;
+import com.backend.oneqjob.companyUser.service.BusinessNumberCheckService;
 import com.backend.oneqjob.companyUser.service.CompanySignUpServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CompanyUserSignUpController {
 
     private final CompanySignUpServiceImpl signUpService;
+    private final BusinessNumberCheckService checkService;
 
     /**
      * @param request (사업자 회원정보)
@@ -44,6 +47,19 @@ public class CompanyUserSignUpController {
             bindingResult.reject("Signup Error occurred");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed: Internal server error");
         }
+    }
 
+
+    //사업자조회 컨트롤러
+    @PostMapping("/company/BusinessNumber")
+    public ResponseEntity<String> BusinessNumberVerification(@RequestBody BusinessNumberRequest businessNumber) {
+
+        try {
+            checkService.check(businessNumber);
+            return ResponseEntity.ok("Business number verified.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error retrieving business registration number.");
+        }
     }
 }
