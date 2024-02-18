@@ -1,7 +1,6 @@
 spring:
   profiles:
     active: database
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,3 +12,8 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    p6spy: debug
+    data.redis: DEBUG
+    session: DEBUG
+
+spring.config.import: classpath:application-secret.yml

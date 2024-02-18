@@ -2,15 +2,15 @@ package com.backend.oneqjob.domain.user.exception;
 
 
 public class CustomException extends RuntimeException {
-    private final int code; // 에러 코드를 저장할 필드
+    private final int code;
 
     public CustomException(ErrorCode errorCode) {
-        super(errorCode.getDescription()); // 상위 클래스인 RuntimeException의 message 필드에 에러 메시지 저장
-        this.code = errorCode.getCode(); // 에러 코드 저장
+        super(errorCode.getDescription());
+        this.code = errorCode.getCode();
     }
 
     public int getCode() {
-        return code; // 에러 코드 반환
+        return code;
     }
 }
 
