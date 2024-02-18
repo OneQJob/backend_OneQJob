@@ -6,10 +6,7 @@ import com.backend.oneqjob.entity.dto.VerificationCodeDto;
 import com.backend.oneqjob.global.api.ResponseDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -20,10 +17,12 @@ public class SmsController {
         this.otpService = otpService;
     }
 
+
     @PostMapping("/checkOtp")
-    public ResponseEntity<ResponseDto> sendOtp(@RequestBody VerificationCodeDto otpCodeRequest) {
+    public ResponseEntity<ResponseDto> checkOtp(@RequestBody VerificationCodeDto otpCodeRequest,
+                                                @CookieValue(name = "JSESSIONID", required = false) String sessionId){
         try {
-            boolean isValid = otpService.verifyOtp(otpCodeRequest);
+            boolean isValid = otpService.verifyOtp(otpCodeRequest,sessionId);
             if (isValid) {
                 ResponseDto responseDto = new ResponseDto(true, "Authentication code verification succeeded.", null);
                 return ResponseEntity.ok(responseDto);
