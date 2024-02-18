@@ -1,6 +1,7 @@
 package com.backend.oneqjob.domain.email.controller;
 
 import com.backend.oneqjob.domain.email.common.EmailConst;
+import com.backend.oneqjob.domain.email.exception.CodeNotMatchException;
 import com.backend.oneqjob.domain.email.service.EmailService;
 import com.backend.oneqjob.entity.dto.EmailVerifyRequestDto;
 import com.backend.oneqjob.global.api.ResponseDto;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +43,11 @@ public class EmailController {
             HttpServletRequest request
     ) {
         if (isSignUp) {
-            //TODO 이미 해당 이메일을 사용하는 사업자가 있는지 확인
+            //TODO 이미 해당 이메일을 사용하는 사업자가 있는지 확인 -> 사업자 회원가입 로직과 merge 한 후
         }
 
-//        String verificationCode = emailService.sendEmail(toEmail); -> 계정 막힘. 당분간 아래 방법으로 대체
+//        String verificationCode = emailService.sendEmail(toEmail);
+//        -> 계정 막힘. 당분간 아래 방법으로 대체
         String verificationCode = EmailUtils.generateCode();
 
         HttpSession session = request.getSession();
@@ -70,13 +73,11 @@ public class EmailController {
             HttpServletRequest request
     ) {
         if (realCode == null) {
-            throw new RuntimeException();
-            //TODO 예외 제대로 던지기
+            throw new SessionException("email verification code is not stored in session");
         }
 
         if (!realCode.equals(requestDto.getVerificationCode())) {
-            throw new RuntimeException();
-            //TODO 예외 제대로 던지기
+            throw new CodeNotMatchException("email verification code is not matched");
         }
 
         HttpSession session = request.getSession();
