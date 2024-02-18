@@ -9,6 +9,7 @@ volume/
 src/main/resources/application-database.yml
 ###application.yml 민감 정보 (추가 사항)### sms
 src/main/resources/application-secret.yml
+src/main/resources/application-datacase.yml
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
