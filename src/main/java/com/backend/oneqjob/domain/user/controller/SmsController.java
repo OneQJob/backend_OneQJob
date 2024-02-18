@@ -2,6 +2,7 @@ package com.backend.oneqjob.domain.user.controller;
 import com.backend.oneqjob.domain.user.exception.CustomException;
 import com.backend.oneqjob.entity.dto.SmsRequestDto;
 import com.backend.oneqjob.domain.user.service.OtpService;
+import com.backend.oneqjob.entity.dto.VerificationCodeDto;
 import com.backend.oneqjob.global.api.ResponseDto;
 import jakarta.servlet.http.HttpSession;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -28,12 +29,12 @@ public class SmsController {
     }
 
     @PostMapping("/sendOtp")
-    public ResponseEntity<ResponseDto> sendOtp(@RequestBody SmsRequestDto otpRequest, HttpSession session) {
+    public ResponseEntity<ResponseDto> sendOtp(@RequestBody SmsRequestDto otpRequest) {
         try {
-            HttpSession sessionForSMS = otpService.createSession(session, otpRequest);
-            SingleMessageSendingRequest sendingRequest = otpService.beforeRequest(sessionForSMS);
+            String s = otpService.createSession(otpRequest);
+            SingleMessageSendingRequest sendingRequest = otpService.beforeRequest(s);
             messageService.sendOne(sendingRequest);
-            Map<String, Object> data = otpService.getData(sessionForSMS);
+            Map<String, Object> data = otpService.getData(s);
             ResponseDto<Map<String, Object>> responseDto = new ResponseDto<>(true, "OTP code was successfully sent", data);
             return ResponseEntity.ok(responseDto);
         } catch (CustomException e) {
@@ -41,6 +42,26 @@ public class SmsController {
             return ResponseEntity.badRequest().body(responseDto);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/checkOtp")
+    public ResponseEntity<ResponseDto> checkOtp(@RequestBody VerificationCodeDto otpCodeRequest) {
+        try {
+            boolean isValid = otpService.verifyOtp(otpCodeRequest);
+            if (isValid) {
+                ResponseDto responseDto = new ResponseDto(true, "Authentication code verification succeeded.", null);
+                return ResponseEntity.ok(responseDto);
+            } else {
+                ResponseDto responseDto = new ResponseDto(false, "Verification failed due to unexpected error.", null);
+                return ResponseEntity.badRequest().body(responseDto);
+            }
+        } catch (CustomException e) {
+            ResponseDto responseDto = new ResponseDto(false, e.getMessage(), null);
+            return ResponseEntity.badRequest().body(responseDto);
+        } catch (Exception e) {
+            ResponseDto responseDto = new ResponseDto(false, "An error occurred during verification.", null);
+            return ResponseEntity.internalServerError().body(responseDto);
         }
     }
 }

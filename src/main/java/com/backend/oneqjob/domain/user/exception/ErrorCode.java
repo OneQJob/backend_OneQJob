@@ -9,7 +9,9 @@ public enum ErrorCode {
     USER_ID_DUPLICATE(106, "UserId already exists"),
     USER_ID_FORMAT_INVALID(107, "UserId format is invalid"),
     SMS_SENDING_ERROR(108, "Error occurred while sending SMS"),
-    SESSION_ERROR(109, "Session handling error");
+    SESSION_ERROR(109, "Session handling error"),
+    INVALID_CODE(110, "Invalid verification code"),
+    TIMEOUT(111, "Session timeout or OTP expired");
 
     private final int code;
     private final String description;

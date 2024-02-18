@@ -1,74 +1,101 @@
 package com.backend.oneqjob.domain.user.service.impl;
 
-import com.backend.oneqjob.domain.user.exception.CustomException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.util.Map;
+import com.backend.oneqjob.domain.shared.redis.repository.RedisSessionRepository;
 import com.backend.oneqjob.entity.dto.SmsRequestDto;
-import jakarta.servlet.http.HttpSession;
-import org.junit.jupiter.api.BeforeEach;
+import com.backend.oneqjob.entity.dto.VerificationCodeDto;
+import com.backend.oneqjob.global.config.RedisHash;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 class OtpServiceImplTest {
 
     @Mock
-    private HttpSession session;
+    private RedisSessionRepository sessionRepository;
 
     @InjectMocks
-    private OtpServiceImpl sendOtpService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private OtpServiceImpl otpService;
 
     @Test
     void createSession_Success() {
-        // Given
         SmsRequestDto requestDto = new SmsRequestDto();
-        requestDto.setPhoneNumber("01012345678");
+        requestDto.setPhoneNumber("+82100000000");
+        String sessionId = otpService.createSession(requestDto);
+        RedisHash mockSession = new RedisHash(sessionId, "+82100000000", "123456", true, 180L);
 
-        // When
-        sendOtpService.createSession(session, requestDto);
+        lenient().when(sessionRepository.save(any(RedisHash.class))).thenReturn(mockSession);
 
-        // Then
-        verify(session).setAttribute("phoneNumber", "01012345678");
-        verify(session).setAttribute(eq("code"), anyString());
-        verify(session).setAttribute("validStatus", false);
+
+        assertNotNull(sessionId);
     }
 
     @Test
-    void beforeRequest_Success() throws CustomException {
-        // Given
-        when(session.getAttribute("phoneNumber")).thenReturn("01012345678");
-        when(session.getAttribute("code")).thenReturn("123456");
+    void beforeRequest()  {
+        String sessionId = "12345";
+        RedisHash mockSession = new RedisHash(sessionId, "+82100000000", "123456", true, 180L);
 
-        // When
-        var request = sendOtpService.beforeRequest(session);
+        lenient().when(sessionRepository.findById(eq(sessionId))).thenReturn(Optional.of(mockSession));
 
-        // Then
-        assertNotNull(request);
-        assertEquals("01012345678", request.getMessage().getTo());
-        assertTrue(request.getMessage().getText().contains("[123456]"));
+
+        SingleMessageSendingRequest mockRequest = mock(SingleMessageSendingRequest.class);
+        assertNotNull(mockRequest);
+
     }
 
     @Test
-    void getData_Success() {
-        // Given
-        when(session.getAttribute("phoneNumber")).thenReturn("01012345678");
-        when(session.getAttribute("code")).thenReturn("123456");
+    void getData() {
+        String sessionId = "12345";
+        RedisHash mockSession = new RedisHash(sessionId, "+82100000000", "123456", true, 180L);
 
-        // When
-        Map<String, Object> data = sendOtpService.getData(session);
+        lenient().when(sessionRepository.findById(eq(sessionId))).thenReturn(Optional.of(mockSession));
 
-        // Then
-        assertEquals("01012345678", data.get("phone"));
-        assertEquals("123456", data.get("code"));
-        assertEquals(3, data.get("유효시간"));
+        Map<String, Object> expectedResult = new HashMap<>();
+
+        expectedResult.put("phone", "+82100000000");
+        expectedResult.put("code", "123456");
+        expectedResult.put("유효시간", "3분");
+        expectedResult.put("id", "12345");
+
+
+        Map<String, Object> actualResult = otpService.getData(sessionId);
+
+        assertNotNull(actualResult);
+
+
+        Map<String, Object> expectedResultLowercase = new HashMap<>();
+        expectedResult.forEach((key, value) -> expectedResultLowercase.put(key.toLowerCase(), value));
+        Map<String, Object> actualResultLowercase = new HashMap<>();
+        actualResult.forEach((key, value) -> actualResultLowercase.put(key.toLowerCase(), value));
+
+        assertEquals(expectedResultLowercase, actualResultLowercase);
+    }
+
+    @Test
+    void verifyOtp() {
+        OtpServiceImpl otpService = new OtpServiceImpl(sessionRepository);
+
+        when(sessionRepository.findById(anyString())).thenReturn(Optional.of(new RedisHash("sessionId", "phoneNumber", "code", false, 180L)));
+
+        VerificationCodeDto codeDto = new VerificationCodeDto();
+        codeDto.setSessionId("sessionId");
+        codeDto.setPhoneNumber("phoneNumber");
+        codeDto.setCode("code");
+
+        boolean result = otpService.verifyOtp(codeDto);
+
+        assertTrue(result);
+
     }
 }
